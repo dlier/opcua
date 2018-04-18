@@ -1,0 +1,9 @@
+{
+    "config_version": "1.0.0",
+    "server_name": "opc.tcp://localhost:4840",
+
+    "server_values": [
+        {"type": "int32", "name": "the.answer"}
+    ]
+}
+
