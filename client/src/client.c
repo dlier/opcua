@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "open62541.h"
 
+#include "json.h"
+
 int main(void)
 {
     UA_Client *client = UA_Client_new(UA_ClientConfig_default);
