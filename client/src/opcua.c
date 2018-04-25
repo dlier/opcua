@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include "open62541.h"
 
-#include "json.h"
 
-int main(void)
+int opcua()
 {
     UA_Client *client = UA_Client_new(UA_ClientConfig_default);
     UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:4840");
@@ -65,3 +64,4 @@ int main(void)
 
     return UA_STATUSCODE_GOOD;
 }
+
