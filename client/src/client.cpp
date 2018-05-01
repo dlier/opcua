@@ -2,32 +2,42 @@
 #include "intfopcua.h"
 #include "intfjson.h"
 
-int main(void)
+using namespace std;
+
+int main(int argc, char* argv[])
 {
+	// get the arguments
+	// 1st - json configuration file
+	vector<string> vArgs(argv+1, argv+argc);
+
+	if (vArgs.size() < 1)
+	{
+		cout << "missing arguments: client configuration.json" << endl;
+		return 0;
+	}
+
 	// read the configuration file
-	CInterfaceJson  intfJson("../cfg/configuration.json");
+	CInterfaceJson intfJson(vArgs[0].c_str());
 
 	// connect to the server
 	CInterfaceOpcUA intfOpcUA(intfJson.getServerName().c_str());
 
 	// create the parameter list
-	std::map< std::string, std::vector<std::string> > MapParameterList;
+	map< string, vector<string> > MapParameterList;
 	intfJson.getParameterList(MapParameterList);
 
 	// create paramater list iterator
-	std::map< std::string, std::vector<std::string> >::iterator
-		   iterM = MapParameterList.begin();
+	map< string, vector<string> >::iterator iterM = MapParameterList.begin();
 
 	// get all values from server
 	for (;iterM != MapParameterList.end(); ++iterM)
 	{
 		if ("int32" == iterM->first)
 		{
-			std::vector<std::string>::iterator iterV = iterM->second.begin();
-
+			vector<string>::iterator iterV = iterM->second.begin();
 			for (; iterV != iterM->second.end(); ++iterV)
 			{
-				std::cout << intfOpcUA.getInt32(1, iterV->c_str()) << std::endl;
+				cout << intfOpcUA.getInt32(1, iterV->c_str()) << endl;
 			}
 		}
 	}

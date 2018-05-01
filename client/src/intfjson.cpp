@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include <iostream>
+#include <string>
 #include "intfjson.h"
 #include <cstring>
+
+using namespace std;
 
 extern "C" {
 	static json_c_visit_userfunc find_object;
 }
 
 
-CInterfaceJson::CInterfaceJson(const char *p_pFileName)
+CInterfaceJson::CInterfaceJson(const string p_pFileName)
 {
-	m_pJsonConfigFile = json_object_from_file(p_pFileName);
+	m_pJsonConfigFile = json_object_from_file(p_pFileName.c_str());
 }
 
 CInterfaceJson::~CInterfaceJson()
