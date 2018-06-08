@@ -1,10 +1,12 @@
+#pragma once
+#ifndef INTFOPCUA_H
+#define INTFOPCUA_H
+
 #include "open62541.h"
 #include <string>
 
 using namespace std;
 
-#ifndef INTFOPCUA_H
-#define INTFOPCUA_H
 
 class CInterfaceOpcUA
 {

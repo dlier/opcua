@@ -43,7 +43,7 @@ static void addVariable(UA_Server *server)
     /* Define the attribute of the myInteger variable node */
     UA_VariableAttributes attr = UA_VariableAttributes_default;
     
-    UA_Int32 myInteger = 42;
+    UA_Int32 myInteger = 41;
     UA_Variant_setScalar(&attr.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
     attr.description = UA_LOCALIZEDTEXT("en-US","the answer");
     attr.displayName = UA_LOCALIZEDTEXT("en-US","the answer");
@@ -69,7 +69,7 @@ static void writeVariable(UA_Server *server)
     UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "the.answer");
 
     /* Write a different integer value */
-        UA_Int32 myInteger = 43;
+    UA_Int32 myInteger = 42;
     UA_Variant myVar;
     UA_Variant_init(&myVar);
     UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_INT32]);

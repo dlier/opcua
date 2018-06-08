@@ -7,52 +7,53 @@
 using namespace std;
 
 extern "C" {
-	static json_c_visit_userfunc find_object;
+    static json_c_visit_userfunc find_object;
 }
 
 
 CInterfaceJson::CInterfaceJson(const string p_pFileName)
 {
-	m_pJsonConfigFile = json_object_from_file(p_pFileName.c_str());
+    m_pJsonConfigFile = json_object_from_file(p_pFileName.c_str());
 }
 
 CInterfaceJson::~CInterfaceJson()
 {}
 
-std::string CInterfaceJson::getServerName()
+string CInterfaceJson::getServerName()
 {
-	std::string sResult;
-	if (NULL != m_pJsonConfigFile)
-	{
-		struct JsonData data("server_name");
+    string sResult;
+    if (NULL != m_pJsonConfigFile)
+    {
+        struct JsonData data("server_name");
 
-		// get the json object with the according tag name
-		int iReturn = json_c_visit(m_pJsonConfigFile, 0, find_object, &data);
+        // get the json object with the according tag name
+        int iReturn = json_c_visit(m_pJsonConfigFile, 0, find_object, &data);
 
-		// get the value
-		if (NULL != data.pJsonObject_OUT)
-			sResult = std::string( json_object_get_string(data.pJsonObject_OUT) );
-	}
-	return sResult;
+        // get the value
+        if (NULL != data.pJsonObject_OUT)
+            sResult = string( json_object_get_string(data.pJsonObject_OUT) );
+    }
+    return sResult;
 }
 
-void CInterfaceJson::getParameterList(std::map< std::string, std::vector<std::string> > &p_ParameterList)
+
+void CInterfaceJson::getParameterList(map<string, vector<pair<string, unsigned int> > > &p_ParameterList)
 {
-	if (NULL != m_pJsonConfigFile)
-	{
-		struct JsonData data("server_values");
+    if (NULL != m_pJsonConfigFile)
+    {
+        struct JsonData data("server_values");
 
-		// get the json object with the according tag name
-		int iReturn = json_c_visit(m_pJsonConfigFile, 0, find_object, &data);
+        // get the json object with the according tag name
+        int iReturn = json_c_visit(m_pJsonConfigFile, 0, find_object, &data);
 
-		// get the value
-		if (NULL != data.pJsonObject_OUT &&
-			json_object_is_type(data.pJsonObject_OUT, json_type_array))
-		{
-			// iterate through the array, get all values and add
-			// them to the according map element
-			size_t iSize = json_object_array_length(data.pJsonObject_OUT);
-			for (size_t i = 0; i<iSize; ++i)
+        // get the value
+        if (NULL != data.pJsonObject_OUT &&
+            json_object_is_type(data.pJsonObject_OUT, json_type_array))
+        {
+            // iterate through the array, get all values and add
+            // them to the according map element
+            size_t iSize = json_object_array_length(data.pJsonObject_OUT);
+            for (size_t i = 0; i<iSize; ++i)
 			{
 				// get one json object from the array
 				struct json_object *obj = json_object_array_get_idx(data.pJsonObject_OUT, i);
@@ -67,30 +68,35 @@ void CInterfaceJson::getParameterList(std::map< std::string, std::vector<std::st
 					struct JsonData dataName("name");
 					iReturn = json_c_visit(obj, 0, find_object, &dataName);
 
+					// get the interval
+					struct JsonData dataInterval("interval_ms");
+					iReturn = json_c_visit(obj, 0, find_object, &dataInterval);
+
 					// append/insert the type-value pair
 					if (NULL != dataType.pJsonObject_OUT &&
-						NULL != dataName.pJsonObject_OUT)
+					    NULL != dataName.pJsonObject_OUT &&
+                                            NULL != dataInterval.pJsonObject_OUT)
 					{
 						// get the exiting vector if any
-						std::map< std::string, std::vector<std::string> >::iterator
-							   	iter = p_ParameterList.find("int32");
+						map< string, vector<pair<string, unsigned int> > >::iterator iter = p_ParameterList.find("int32");
 						
-						// get the server value name
-						std::string sName = json_object_get_string(dataName.pJsonObject_OUT);
+						// get the server value name and iteration
+						string sName = json_object_get_string(dataName.pJsonObject_OUT);
+						unsigned int uiInterval = json_object_get_int(dataInterval.pJsonObject_OUT);
 
 						if (iter != p_ParameterList.end())
 						{
 							// append the value to the existing vector
-							iter->second.push_back(sName);
+							iter->second.push_back( make_pair(sName, uiInterval) );
 						}
 						else
 						{
 							// create a vactor and add the first value
-							std::vector< std::string > values;
-							values.push_back(sName);
+							vector<pair<string, unsigned int> > data;
+							data.push_back( make_pair(sName, uiInterval) );
 
 							// insert the new vector
-							p_ParameterList.insert(std::make_pair("int32", values));
+							p_ParameterList.insert( make_pair("int32", data) );
 						}
 					}
 				}
@@ -119,4 +125,3 @@ extern "C" int find_object(json_object *jso, int flags,
 	}
 	return JSON_C_VISIT_RETURN_CONTINUE;
 }
-

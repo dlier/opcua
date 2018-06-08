@@ -1,3 +1,7 @@
+#pragma once
+#ifndef INTJSON_H
+#define INTJSON_H
+
 #include <map>
 #include <vector>
 #include <string>
@@ -9,8 +13,6 @@ extern "C" {
 
 using namespace std;
 
-#ifndef INTFJSON_H
-#define INTFJSON_H
 
 struct JsonData
 {
@@ -33,8 +35,8 @@ public:
 	CInterfaceJson(const string p_pFileName);
 	~CInterfaceJson();
 
-	std::string getServerName();
-	void getParameterList(std::map< std::string, std::vector<std::string> > &p_ParameterList);
+	string getServerName();
+	void getParameterList(map<string, vector<pair<string, unsigned int> > > &p_ParameterList);
 
 private:
 	json_object *m_pJsonConfigFile;

@@ -3,7 +3,7 @@
     "server_name": "opc.tcp://localhost:4840",
 
     "server_values": [
-        {"type": "int32", "name": "the.answer"}
+        { "type": "int32", "name": "the.answer", "interval_ms": 1000 }
     ]
 }
 

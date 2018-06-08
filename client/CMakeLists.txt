@@ -15,17 +15,24 @@ elseif (Win32)
 	#bla
 endif ()
 
-set (CMAKE_C_FLAGS "-std=c99")
 set (SOURCES src/client.cpp
-		     src/intfopcua.cpp
-			 src/intfjson.cpp)
+	     src/intfopcua.cpp
+	     src/intfjson.cpp
+	     src/getdata.cpp)
 
 add_executable (client ${SOURCES})
+
+set_target_properties(client PROPERTIES
+    CXX_STANDARD 14
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS YES
+)
+
 
 if (UNIX)
 
 	# build for UNIX
-	target_link_libraries (client json-c open62541)
+	target_link_libraries (client json-c open62541 pthread)
 
 elseif (Win32)
 
